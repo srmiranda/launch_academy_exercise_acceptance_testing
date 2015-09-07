@@ -27,29 +27,38 @@ feature "User checks a recipe's deliciousness", %(
     visit '/'
     fill_in 'recipe_name', with: 'pickled beets'
     click_button 'Submit'
+    expect(page).to have_content('is a delicious recipe!')
   end
 
   scenario "user submits a recipe name without 'pickled beets'" do
     visit '/'
     fill_in 'recipe_name', with: 'macaroni and cheese'
     click_button 'Submit'
+    expect(page).to have_content('is not a delicious recipe!')
   end
 
   scenario "user navigates back to the home page after checking a recipe name" do
     visit '/'
     fill_in 'recipe_name', with: 'pickled beets kabob'
     click_button 'Submit'
+    expect(page).to have_content("delicious recipe")
     click_link 'Try again!'
+    expect(page).to have_content("The High-Tech Recipe Evaluation Machine")
   end
 
   scenario "user submits an empty form" do
     visit '/'
+    fill_in 'recipe_name', with: nil
     click_button 'Submit'
+    expect(page).to have_content("You can't submit an empty recipe name!")
   end
 
   scenario "user navigates back to the home page after submitting an empty form" do
     visit '/'
+    fill_in 'recipe_name', with: nil
     click_button 'Submit'
-    click_link("Try again!")
-  end
+    expect(page).to have_content("You can't submit an empty recipe name!")
+    click_link 'Try again!'
+    expect(page).to have_content("The High-Tech Recipe Evaluation Machine")
+   end
 end
